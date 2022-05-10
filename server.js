@@ -1,25 +1,47 @@
+// env import
 require("dotenv").config();
 
+// Import dependencies
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
-const booksroutes = require("./routes/books");
-const PORT = process.env.PORT || 3000;
+const winston = require("winston");
+const app = express();
+const cors = require("cors");
+const PORT = process.env.PORT;
 
-// middlewares
+// Mongodb connnection
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true })
+  .then(() => logger.info("Connected To Database"))
+  .catch((error) => logger.error(error.message));
+// const db = mongoose.connection;
+// db.on("error", (error) => logger.log("error", error));
+// db.once("open", () => logger.log("info", "Connected To Database"));
+
+app.use(cors());
+// Allow server to accept JSON
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use("/api/books", booksroutes);
-
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
+// create  a logger
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(winston.format.colorize({ all: true })),
+    }),
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+  ],
+  exceptionHandlers: [
+    new winston.transports.File({ filename: "exceptions.log" }),
+  ],
 });
-const db = mongoose.connection;
 
-db.on("error", (err) => console.error(err));
-db.once("open", () => console.log("Connected To Database"));
+// routers
+const customersRouter = require("./routes/customers");
+app.use("/customers", customersRouter);
+const transactionRouter = require("./routes/transfers");
+app.use("/transfers", transactionRouter);
 
-app.listen(PORT, () => console.log("Server started at PORT: ", PORT));
-// some coment
+// Server port
+app.listen(3000, () => logger.info(`Server started at ${PORT}`));
