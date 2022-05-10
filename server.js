@@ -44,4 +44,4 @@ const transactionRouter = require("./routes/transfers");
 app.use("/transfers", transactionRouter);
 
 // Server port
-app.listen(3000, () => logger.info(`Server started at ${PORT}`));
+app.listen(PORT, () => logger.info(`Server started at ${PORT}`));
