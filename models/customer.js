@@ -5,6 +5,11 @@ const customerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatarImg: {
+    type: String,
+    default:
+      "https://www.nicepng.com/png/full/933-9332131_profile-picture-default-png.png",
+  },
   email: {
     type: String,
     required: true,

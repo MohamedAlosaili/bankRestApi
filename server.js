@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const winston = require("winston");
 const app = express();
 const cors = require("cors");
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // Mongodb connnection
 mongoose

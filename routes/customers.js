@@ -45,6 +45,9 @@ router.patch("/:id", getCustomer, async (req, res) => {
   if (req.body.currentBalance != null) {
     res.customer.currentBalance = req.body.currentBalance;
   }
+  if (req.body.avatarImg != null) {
+    res.customer.avatarImg = req.body.avatarImg;
+  }
   try {
     const updatedCustomer = await res.customer.save();
     res.json(updatedCustomer);
